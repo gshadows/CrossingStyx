@@ -90,9 +90,55 @@ public class Waves : MonoBehaviour
             }
         }
         mesh.vertices = verts;
-        mesh.RecalculateNormals();
         mesh.RecalculateBounds();
+        mesh.RecalculateNormals();
     }
+
+    public float? getHeight (Vector3 worldPoint) {
+        Vector3 point = worldPoint - transform.position; // Make local
+        //Debug.LogFormat("HEIGHT: point {0} -> {1}", worldPoint, point);
+        float wx = linesX * densityX; // Total width.
+        float wz = linesZ * densityZ; // Total height.
+        // Check if outside bounds.
+        if ((point.x < 0) || (point.x >= wx) || (point.z < 0) || (point.z >= wz)) {
+            //Debug.LogFormat("HEIGHT: pt ({0}, {1}) outside bounds ({2}, {3})", point.x, point.z, wx, wz);
+            return null;
+        }
+        // Calculate cell coordinates.
+        //Debug.LogFormat("HEIGHT: wx {0}, wz {1}", wx, wz);
+        int cellX = (int)Mathf.Floor(point.x);
+        int cellZ = (int)Mathf.Floor(point.z);
+        //Debug.LogFormat("HEIGHT: cx {0}, cz {1}", cellX, cellZ);
+        // Get 4 vertices around.
+        var verts = mesh.vertices;
+        var v1 = verts[index(cellX+0, cellZ+0, linesZ)];
+        var v2 = verts[index(cellX+1, cellZ+0, linesZ)];
+        var v3 = verts[index(cellX+0, cellZ+1, linesZ)];
+        var v4 = verts[index(cellX+1, cellZ+1, linesZ)];
+        //Debug.LogFormat("HEIGHT: {0}, {1}, {2}, {3}", v1, v2, v3, v4);
+        // Get distances.
+        var p1 = new Vector2(v1.x, v1.z);
+        var p2 = new Vector2(v2.x, v2.z);
+        var p3 = new Vector2(v3.x, v3.z);
+        var p4 = new Vector2(v4.x, v4.z);
+        var p = new Vector2(point.x, point.z);
+        //Debug.LogFormat("HEIGHT: 2D {0}, {1}, {2}, {3} -> {4}", p1, p2, p3, p4, p);
+        var d1 = Vector2.Distance(p, p1);
+        var d2 = Vector2.Distance(p, p2);
+        var d3 = Vector2.Distance(p, p3);
+        var d4 = Vector2.Distance(p, p4);
+        //Debug.LogFormat("HEIGHT: dist {0}, {1}, {2}, {3}", d1, d2, d3, d4);
+        //Debug.LogFormat("HEIGHT: dist/diag {0}, {1}, {2}, {3}", d1 / 1.414214f, d2 / 1.414214f, d3 / 1.414214f, d4 / 1.414214f);
+        float averageY = (v1.y * d1 + v2.y * d2 + v3.y * d3 + v4.y * d4) / 1.414214f;
+        //Debug.LogFormat("HEIGHT: avgY {0}", averageY);
+        {
+            vv1 = v1; vv2 = v2; vv3 = v3; vv4 = v4; wwp = worldPoint;
+            hhh = new Vector3(worldPoint.x, averageY, worldPoint.z);
+        }
+        return averageY;
+    }
+
+    Vector3 vv1, vv2, vv3, vv4, wwp, hhh;
 
 
     private void OnDrawGizmos() {
@@ -100,6 +146,7 @@ public class Waves : MonoBehaviour
             mesh = new Mesh();
             mesh.name = gameObject.name;
             generateMesh();
+            mesh.RecalculateBounds();
         }
         Gizmos.color = Color.blue;
         Vector3 size = mesh.bounds.size;
@@ -108,6 +155,23 @@ public class Waves : MonoBehaviour
         }
         size.y *= 2;
         Gizmos.DrawWireCube(mesh.bounds.center, size);
+
+        if (Application.isPlaying) {
+            Gizmos.color = Color.red;
+            Gizmos.DrawWireSphere(vv1, 0.1f);
+            Gizmos.DrawWireSphere(vv2, 0.1f);
+            Gizmos.DrawWireSphere(vv3, 0.1f);
+            Gizmos.DrawWireSphere(vv4, 0.1f);
+            Gizmos.DrawLine(vv1, vv2);
+            Gizmos.DrawLine(vv2, vv3);
+            Gizmos.DrawLine(vv3, vv4);
+            Gizmos.DrawLine(vv4, vv1);
+            Gizmos.DrawLine(vv1, vv3);
+            Gizmos.DrawLine(vv2, vv4);
+            Gizmos.color = Color.green;
+            Gizmos.DrawWireSphere(wwp, 0.1f);
+            Gizmos.DrawLine(wwp, hhh);
+        }
     }
 
 }
