@@ -20,8 +20,9 @@ public class Waves : MonoBehaviour
     [Range(0.01f, 100f)] float UVscale = 1f;
     public Octave[] ocataves;
 
-    protected MeshFilter meshFilter;
-    protected Mesh mesh;
+    private MeshFilter meshFilter;
+    private Mesh mesh;
+    private float diagSize;
 
     void Start()
     {
@@ -29,6 +30,7 @@ public class Waves : MonoBehaviour
         mesh.name = gameObject.name;
         generateMesh();
         mesh.RecalculateBounds();
+        diagSize = Mathf.Sqrt(densityX * densityX + densityZ * densityZ);
 
         meshFilter = gameObject.AddComponent<MeshFilter>();
         meshFilter.mesh = mesh;
@@ -128,8 +130,8 @@ public class Waves : MonoBehaviour
         var d3 = Vector2.Distance(p, p3);
         var d4 = Vector2.Distance(p, p4);
         //Debug.LogFormat("HEIGHT: dist {0}, {1}, {2}, {3}", d1, d2, d3, d4);
-        //Debug.LogFormat("HEIGHT: dist/diag {0}, {1}, {2}, {3}", d1 / 1.414214f, d2 / 1.414214f, d3 / 1.414214f, d4 / 1.414214f);
-        float averageY = (v1.y * d1 + v2.y * d2 + v3.y * d3 + v4.y * d4) / 1.414214f;
+        float averageY = (v1.y * d1 + v2.y * d2 + v3.y * d3 + v4.y * d4) / diagSize / (d1 + d2 + d3 + d4);
+        //Debug.LogFormat("HEIGHT: {0}, {1}, {2}, {3} -> dist {4}, {5}, {6}, {7} -> {8}", v1.y, v2.y, v3.y, v4.y, d1 / diagSize, d2 / diagSize, d3 / diagSize, d4 / diagSize, averageY);
         //Debug.LogFormat("HEIGHT: avgY {0}", averageY);
         {
             vv1 = v1; vv2 = v2; vv3 = v3; vv4 = v4; wwp = worldPoint;
