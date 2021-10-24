@@ -74,9 +74,7 @@ public class FloatBoat : MonoBehaviour
             newY = transform.position.y;
         }
 
-        //Quaternion rotation = transform.rotation;
         Quaternion rotation = Quaternion.Euler(transform.eulerAngles.x, transform.eulerAngles.y, roll + rollWaveDelta);
-        Debug.LogFormat("Rotation {0} ({3}), roll {1}, waves {2}", rotation, roll, waves, rotation.z);
         transform.SetPositionAndRotation(new Vector3(transform.position.x, newY + deltaY, transform.position.z + deltaZ), rotation);
     }
 
