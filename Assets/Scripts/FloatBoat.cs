@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using UnityEngine;
 
@@ -16,12 +17,17 @@ public class FloatBoat : MonoBehaviour
     [Range(-0.01f, -2f)] public float sinkingSpeed = -0.1f;
     [Range(0.01f, 2f)] public float rollChangeSpeed = 0.1f;
     [Range(0f, 30f)] public float wavesMaxRoll = 15f;
+    [Range(0f, 90f)] public float capsizeRoll = 45f;
+    [Range(0f, 90f)] public float sinkiRoll = 90f;
+    [Range(0f, 90f)] public float humanMaxRoll = 30f;
+
+    public PlayerOnBoat player;
+    public SillyHuman[] sillyHumans;
 
     [ReadOnly] public State state = State.FLOATING;
     [ReadOnly] public float roll = 0f; // Current boat roll.
 
     private float startCapsizeRoll;
-    private float targetRoll = 0f; // Boat roll induced by silly passengers.
 
     void FixedUpdate() {
         float deltaZ = 0f; // Move forward.
@@ -30,7 +36,7 @@ public class FloatBoat : MonoBehaviour
 
         switch (state) {
             case State.FLOATING:
-                if (Mathf.Abs(roll) > 45f) {
+                if (Mathf.Abs(roll) > capsizeRoll) {
                     Debug.Log("CAPSIZING!!!");
                     state = State.CAPSIZING;
                     startCapsizeRoll = roll;
@@ -40,6 +46,7 @@ public class FloatBoat : MonoBehaviour
                 rollWaveDelta = wavesMaxRoll * Mathf.Sin(Time.fixedTime); // Waves effect - temporary roll delta.
                 deltaZ = boatSpeedMPS * Time.fixedDeltaTime; // Move forward.
                 // Changing roll by silly pasengers.
+                float targetRoll = calculateTargetRoll();
                 float dr = rollChangeSpeed * Time.fixedDeltaTime;
                 if (Mathf.Abs(targetRoll - roll) > dr) {
                     roll += dr * Mathf.Sign(targetRoll);
@@ -47,8 +54,10 @@ public class FloatBoat : MonoBehaviour
                     roll = targetRoll;
                 }
                 break;
+
             case State.CAPSIZING:
-                if (Mathf.Abs(roll) > 90f) {
+                // Slowly rotate to the side before going down.
+                if (Mathf.Abs(roll) > sinkiRoll) {
                     Debug.Log("SINKING!!!");
                     state = State.SINKING;
                     onSink();
@@ -57,15 +66,20 @@ public class FloatBoat : MonoBehaviour
                 roll += Mathf.Lerp(startCapsizeRoll, 90f * Mathf.Sign(startCapsizeRoll), Time.fixedDeltaTime); // Roll: 45° -> 90°.
                 deltaZ = Mathf.Lerp(boatSpeedMPS, 0, Time.fixedDeltaTime) * Time.fixedDeltaTime; // Reducing speed to zero.
                 break;
+
             case State.SINKING:
+                // Just go down vertically.
                 deltaY = sinkingSpeed * Time.fixedDeltaTime;
                 break;
+
             default:
+                // Something goes wrong.
                 Debug.LogErrorFormat("Unsupported state: {0}", state);
                 state = State.FLOATING;
                 return;
         }
 
+        // Calculate water Y coordinate taking wave height into account.
         float newY;
         float? waterLevel = waves.getHeight(transform.position);
         if (waterLevel != null) {
@@ -74,12 +88,22 @@ public class FloatBoat : MonoBehaviour
             newY = transform.position.y;
         }
 
+        // Apply new position and rotation.
         Quaternion rotation = Quaternion.Euler(transform.eulerAngles.x, transform.eulerAngles.y, roll + rollWaveDelta);
-        transform.SetPositionAndRotation(new Vector3(transform.position.x, newY + deltaY, transform.position.z + deltaZ), rotation);
+        Vector3 position = new Vector3(transform.position.x, newY + deltaY, transform.position.z + deltaZ);
+        transform.SetPositionAndRotation(position, rotation);
     }
 
 
-    public void setTargetRoll (float newTargetRoll) {
-        targetRoll = newTargetRoll;
+    private float calculateTargetRoll() {
+        float roll = player.getPosition() * humanMaxRoll;
+        string dbg = "" + Mathf.Round(roll) + "° vs ";
+        foreach (SillyHuman human in sillyHumans) {
+            roll += human.getPosition() * humanMaxRoll;
+            dbg += Mathf.Round(human.getPosition() * humanMaxRoll) + "°, ";
+        }
+        dbg += "-> " + Mathf.Round(roll);
+        Debug.Log(dbg);
+        return roll;
     }
 }

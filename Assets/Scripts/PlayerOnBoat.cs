@@ -4,27 +4,42 @@ using UnityEngine;
 
 public class PlayerOnBoat : MonoBehaviour
 {
-    public float mouseSensitivity = 2;
-    public float upDownLookRange = 90;
+    [Range(0f, 1f)] public float walkingSpeed = 0.25f;
+    [Range(0f, 2f)] public float walkingLimit = 1f; // Position range [-1..+1] corresponds to X-coordinate [-walkingLimit..+wakingLimit].
+    public FloatBoat boat;
 
-    float curAngleLR = 0;
-    float curAngleUD = 0;
+    private float position = 0f;
+    private float startX;
+    private bool missionFailed = false;
 
     private void Start() {
-        Cursor.lockState = CursorLockMode.Locked;
-        Cursor.visible = false;
+        startX = transform.localPosition.x;
+        boat.onCapsize += onMissionFailed;
+        boat.onSink += onMissionFailed;
     }
 
     void Update()
     {
-        // Rotation.
-        float rotLeftRight = Input.GetAxis("Mouse X") * mouseSensitivity;
-        curAngleLR += rotLeftRight;
+        if (!missionFailed) {
+            walking();
+        }
+    }
 
-        float rotUpDown = Input.GetAxis("Mouse Y") * mouseSensitivity;
-        curAngleUD = Mathf.Clamp(curAngleUD - rotUpDown, -upDownLookRange, upDownLookRange);
 
-        //transform.Rotate(rotUpDown, rotLeftRight, 0);
-        transform.localRotation = Quaternion.Euler(curAngleUD, curAngleLR, 0);
+    private void walking() {
+        float deltaX = Input.GetAxis("Horizontal") * walkingSpeed * Time.deltaTime;
+        position = Mathf.Clamp(position + deltaX, -1f, +1f);
+        Vector3 pos = new Vector3(startX + position * walkingLimit, transform.localPosition.y, transform.localPosition.z);
+        transform.localPosition = pos;
+    }
+
+
+    private void onMissionFailed() {
+        missionFailed = true;
+    }
+
+
+    public float getPosition() {
+        return position;
     }
 }
