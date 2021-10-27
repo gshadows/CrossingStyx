@@ -13,7 +13,6 @@ public class SillyHuman : MonoBehaviour
     private float targetPosition = 0;   // Target position on boat (where we go).
     private bool missionFailed = false; // True if boat is capsizing/sinking (player failed).
     private float nextTimeToMove;       // Delay before next movement.
-    //private float startX; // Our initial X coordinate.
 
     private FloatBoat boat;
     private WinLooseControl gameCtl;
@@ -25,8 +24,6 @@ public class SillyHuman : MonoBehaviour
         boat.onCapsize += onMissionFailed;
         boat.onSink += onMissionFailed;
         nextTimeToMove = startWalkingDelaySec;
-        //startX = transform.position.x;
-        Debug.Log("Started at " + Time.time);
     }
 
 

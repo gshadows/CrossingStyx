@@ -15,10 +15,11 @@ public class FloatBoat : MonoBehaviour
     [Range(-5f, +5f)] public float waterLine = 0f;
     [Range(0.01f, 10f)] public float boatSpeedMPS = 0.25f;
     [Range(-0.01f, -2f)] public float sinkingSpeed = -0.1f;
-    [Range(0.01f, 5f)] public float rollChangeSpeed = 0.1f;
+    [Range(0.01f, 45f)] public float rollChangeSpeed = 30f;
+    [Range(0.01f, 45f)] public float rollSpeedCapsize = 5f;
     [Range(0f, 30f)] public float wavesMaxRoll = 15f;
     [Range(0f, 90f)] public float capsizeRoll = 45f;
-    [Range(0f, 90f)] public float sinkiRoll = 90f;
+    [Range(0f, 90f)] public float sinkRoll = 90f;
     [Range(0f, 90f)] public float humanMaxRoll = 30f;
 
     public PlayerOnBoat player;
@@ -28,6 +29,7 @@ public class FloatBoat : MonoBehaviour
     [ReadOnly] public float roll = 0f; // Current boat roll.
 
     private float startCapsizeRoll;
+    private float startCapsizeTime;
     private FloatBoat boat;
     private WinLooseControl gameCtl;
 
@@ -53,6 +55,7 @@ public class FloatBoat : MonoBehaviour
                     Debug.Log("CAPSIZING!!!");
                     state = State.CAPSIZING;
                     startCapsizeRoll = roll;
+                    startCapsizeTime = Time.time;
                     onCapsize();
                     break;
                 }
@@ -62,6 +65,7 @@ public class FloatBoat : MonoBehaviour
                 float targetRoll = calculateTargetRoll();
                 float dr = rollChangeSpeed * Time.fixedDeltaTime;
                 float diff = targetRoll - roll;
+                //Debug.LogFormat("targ {0}, curr {1}, diff {2}, dr {3}, fix {4}", targetRoll, roll, diff, dr, Time.fixedDeltaTime);
                 if (Mathf.Abs(diff) > dr) {
                     roll += dr * Mathf.Sign(diff);
                 } else {
@@ -71,14 +75,19 @@ public class FloatBoat : MonoBehaviour
 
             case State.CAPSIZING:
                 // Slowly rotate to the side before going down.
-                if (Mathf.Abs(roll) > sinkiRoll) {
+                if (Mathf.Abs(roll) > sinkRoll) {
                     Debug.Log("SINKING!!!");
                     state = State.SINKING;
                     onSink();
                     break;
                 }
-                roll += Mathf.Lerp(startCapsizeRoll, 90f * Mathf.Sign(startCapsizeRoll), Time.fixedDeltaTime); // Roll: 45° -> 90°.
-                deltaZ = Mathf.Lerp(boatSpeedMPS, 0, Time.fixedDeltaTime) * Time.fixedDeltaTime; // Reducing speed to zero.
+                // Capsizing boat by uncontrollable increasing roll.
+                float dt = Time.time - startCapsizeTime;
+                roll = startCapsizeRoll + Mathf.Sign(startCapsizeRoll) * rollSpeedCapsize * dt;
+                // Reduce speed to zero while capsizing.
+                float fullCapsizeTime = (sinkRoll - capsizeRoll) / rollSpeedCapsize;
+                deltaZ = boatSpeedMPS * (1f - dt / fullCapsizeTime) * Time.fixedDeltaTime;
+                //Debug.LogFormat("full {0}, spd {1}, dt {2}, dz {3}", fullCapsizeTime, boatSpeedMPS, dt, deltaZ / Time.fixedDeltaTime);
                 break;
 
             case State.SINKING:
@@ -103,7 +112,8 @@ public class FloatBoat : MonoBehaviour
         }
 
         // Apply new position and rotation.
-        Quaternion rotation = Quaternion.Euler(transform.eulerAngles.x, transform.eulerAngles.y, roll + rollWaveDelta);
+        float finalRoll = (roll + rollWaveDelta) * -1; // Because rolling on left size is positive Z rotation, whilst moving left is negative X movement.
+        Quaternion rotation = Quaternion.Euler(transform.eulerAngles.x, transform.eulerAngles.y, finalRoll);
         Vector3 position = new Vector3(transform.position.x, newY + deltaY, transform.position.z + deltaZ);
         transform.SetPositionAndRotation(position, rotation);
     }
