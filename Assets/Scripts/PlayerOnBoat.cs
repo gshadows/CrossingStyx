@@ -6,14 +6,16 @@ public class PlayerOnBoat : MonoBehaviour
 {
     [Range(0f, 1f)] public float walkingSpeed = 0.25f;
     [Range(0f, 2f)] public float walkingLimit = 1f; // Position range [-1..+1] corresponds to X-coordinate [-walkingLimit..+wakingLimit].
-    public FloatBoat boat;
 
     private float position = 0f;
     private float startX;
     private bool missionFailed = false;
+    private FloatBoat boat;
+
 
     private void Start() {
         startX = transform.localPosition.x;
+        boat = GameObject.FindObjectOfType<FloatBoat>();
         boat.onCapsize += onMissionFailed;
         boat.onSink += onMissionFailed;
     }

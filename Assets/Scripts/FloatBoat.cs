@@ -15,7 +15,7 @@ public class FloatBoat : MonoBehaviour
     [Range(-5f, +5f)] public float waterLine = 0f;
     [Range(0.01f, 10f)] public float boatSpeedMPS = 0.25f;
     [Range(-0.01f, -2f)] public float sinkingSpeed = -0.1f;
-    [Range(0.01f, 2f)] public float rollChangeSpeed = 0.1f;
+    [Range(0.01f, 5f)] public float rollChangeSpeed = 0.1f;
     [Range(0f, 30f)] public float wavesMaxRoll = 15f;
     [Range(0f, 90f)] public float capsizeRoll = 45f;
     [Range(0f, 90f)] public float sinkiRoll = 90f;
@@ -28,8 +28,21 @@ public class FloatBoat : MonoBehaviour
     [ReadOnly] public float roll = 0f; // Current boat roll.
 
     private float startCapsizeRoll;
+    private FloatBoat boat;
+    private WinLooseControl gameCtl;
+
+
+    void Start() {
+        boat = GameObject.FindObjectOfType<FloatBoat>();
+        gameCtl = GameObject.FindObjectOfType<WinLooseControl>();
+    }
+
 
     void FixedUpdate() {
+        if (!gameCtl.isPlaying()) {
+            return;
+        }
+
         float deltaZ = 0f; // Move forward.
         float deltaY = 0f; // Skinking.
         float rollWaveDelta = 0f;
@@ -48,8 +61,9 @@ public class FloatBoat : MonoBehaviour
                 // Changing roll by silly pasengers.
                 float targetRoll = calculateTargetRoll();
                 float dr = rollChangeSpeed * Time.fixedDeltaTime;
-                if (Mathf.Abs(targetRoll - roll) > dr) {
-                    roll += dr * Mathf.Sign(targetRoll);
+                float diff = targetRoll - roll;
+                if (Mathf.Abs(diff) > dr) {
+                    roll += dr * Mathf.Sign(diff);
                 } else {
                     roll = targetRoll;
                 }
@@ -81,7 +95,7 @@ public class FloatBoat : MonoBehaviour
 
         // Calculate water Y coordinate taking wave height into account.
         float newY;
-        float? waterLevel = waves.getHeight(transform.position);
+        float? waterLevel = null;// waves.getHeight(transform.position);
         if (waterLevel != null) {
             newY = waterLine + (float)waterLevel;
         } else {
@@ -96,14 +110,28 @@ public class FloatBoat : MonoBehaviour
 
 
     private float calculateTargetRoll() {
-        float roll = player.getPosition() * humanMaxRoll;
-        string dbg = "" + Mathf.Round(roll) + "° vs ";
+        float targetRoll = player.getPosition() * humanMaxRoll;
+        //string dbg = "" + Mathf.Round(targetRoll) + "° vs ";
         foreach (SillyHuman human in sillyHumans) {
-            roll += human.getPosition() * humanMaxRoll;
-            dbg += Mathf.Round(human.getPosition() * humanMaxRoll) + "°, ";
+            targetRoll += human.getPosition() * humanMaxRoll;
+            //dbg += Mathf.Round(human.getPosition() * humanMaxRoll) + "°, ";
         }
-        dbg += "-> " + Mathf.Round(roll);
-        Debug.Log(dbg);
-        return roll;
+        //dbg += "-> " + Mathf.Round(targetRoll) + " --- " + Mathf.Round(roll);
+        //Debug.Log(dbg);
+        return targetRoll;
+    }
+
+
+    private void OnTriggerEnter(Collider other) {
+        if (other.tag == "Finish") {
+            switch (state) {
+                case State.FLOATING:
+                    gameCtl.onBoatArrives(true);
+                    break;
+                case State.CAPSIZING:
+                    gameCtl.onBoatArrives(false);
+                    break;
+            }
+        }
     }
 }

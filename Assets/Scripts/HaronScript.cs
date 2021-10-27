@@ -5,11 +5,12 @@ using UnityEngine;
 
 public class HaronScript : MonoBehaviour
 {
-    public FloatBoat boat;
+    private FloatBoat boat;
 
 
     void Start()
     {
+        boat = GameObject.FindObjectOfType<FloatBoat>();
         boat.onCapsize += onCapsize;
         boat.onSink += onSink;
     }
