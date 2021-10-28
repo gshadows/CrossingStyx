@@ -87,7 +87,6 @@ public class FloatBoat : MonoBehaviour
                 // Reduce speed to zero while capsizing.
                 float fullCapsizeTime = (sinkRoll - capsizeRoll) / rollSpeedCapsize;
                 deltaZ = boatSpeedMPS * (1f - dt / fullCapsizeTime) * Time.fixedDeltaTime;
-                //Debug.LogFormat("full {0}, spd {1}, dt {2}, dz {3}", fullCapsizeTime, boatSpeedMPS, dt, deltaZ / Time.fixedDeltaTime);
                 break;
 
             case State.SINKING:

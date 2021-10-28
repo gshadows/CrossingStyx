@@ -30,6 +30,8 @@ public class WinLooseControl : MonoBehaviour
         yield return new WaitForSeconds(sankLooseDelay);
         gameStage = GameStage.LOOSE;
         looseReason = LooseReason.BOAT_SANK;
+        UIManager.showGameOver();
+        Debug.Log("LOOSE: BOAT SANK!");
     }
 
 
@@ -40,5 +42,6 @@ public class WinLooseControl : MonoBehaviour
 
     public void onBoatArrives(bool clean) {
         gameStage = GameStage.WIN;
+        Debug.Log("WIN!!!");
     }
 }
