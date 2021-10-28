@@ -2,8 +2,7 @@ using System;
 using System.Collections;
 using UnityEngine;
 
-public class FloatBoat : MonoBehaviour
-{
+public class FloatBoat : MyBehaviour {
     public delegate void CapsizeListener();
     public delegate void SinkListener();
     public event CapsizeListener onCapsize;
@@ -25,23 +24,24 @@ public class FloatBoat : MonoBehaviour
     public PlayerOnBoat player;
     public SillyHuman[] sillyHumans;
 
+    public AudioClip capsizing;
+    public AudioClip sinking;
+
     [ReadOnly] public State state = State.FLOATING;
     [ReadOnly] public float roll = 0f; // Current boat roll.
 
     private float startCapsizeRoll;
     private float startCapsizeTime;
     private FloatBoat boat;
-    private WinLooseControl gameCtl;
 
 
     void Start() {
         boat = GameObject.FindObjectOfType<FloatBoat>();
-        gameCtl = GameObject.FindObjectOfType<WinLooseControl>();
     }
 
 
     void FixedUpdate() {
-        if (!gameCtl.isPlaying()) {
+        if (!GameControl.instance.isPlaying()) {
             return;
         }
 
@@ -57,6 +57,7 @@ public class FloatBoat : MonoBehaviour
                     startCapsizeRoll = roll;
                     startCapsizeTime = Time.time;
                     onCapsize();
+                    sound(capsizing);
                     break;
                 }
                 rollWaveDelta = wavesMaxRoll * Mathf.Sin(Time.fixedTime); // Waves effect - temporary roll delta.
@@ -79,6 +80,7 @@ public class FloatBoat : MonoBehaviour
                     Debug.Log("SINKING!!!");
                     state = State.SINKING;
                     onSink();
+                    sound(sinking);
                     break;
                 }
                 // Capsizing boat by uncontrollable increasing roll.
@@ -135,10 +137,10 @@ public class FloatBoat : MonoBehaviour
         if (other.tag == "Finish") {
             switch (state) {
                 case State.FLOATING:
-                    gameCtl.onBoatArrives(true);
+                    GameControl.instance.onBoatArrives(true);
                     break;
                 case State.CAPSIZING:
-                    gameCtl.onBoatArrives(false);
+                    GameControl.instance.onBoatArrives(false);
                     break;
             }
         }

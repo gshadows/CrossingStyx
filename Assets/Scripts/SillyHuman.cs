@@ -2,12 +2,13 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class SillyHuman : MonoBehaviour
-{
+public class SillyHuman : MyBehaviour {
     [Range(0f, 120f)] public float startWalkingDelaySec = 2f; // Walking delay at start of game.
     [Range(0f, 120f)] public float restingDelaySec = 0.5f; // Walking delay after while resting between movements.
     [Range(0f, 1f)] public float walkingSpeed = 0.25f;
     [Range(0f, 2f)] public float walkingLimit = 1f; // Position range [-1..+1] corresponds to X-coordinate [-walkingLimit..+wakingLimit].
+
+    public AudioClip scream;
 
     private float position = 0;         // Our current position on boat in [-1..+1] range.
     private float targetPosition = 0;   // Target position on boat (where we go).
@@ -15,12 +16,10 @@ public class SillyHuman : MonoBehaviour
     private float nextTimeToMove;       // Delay before next movement.
 
     private FloatBoat boat;
-    private WinLooseControl gameCtl;
 
 
     void Start() {
         boat = GameObject.FindObjectOfType<FloatBoat>();
-        gameCtl = GameObject.FindObjectOfType<WinLooseControl>();
         boat.onCapsize += onMissionFailed;
         boat.onSink += onMissionFailed;
         nextTimeToMove = startWalkingDelaySec;
@@ -28,7 +27,7 @@ public class SillyHuman : MonoBehaviour
 
 
     void FixedUpdate() {
-        if (missionFailed || !gameCtl.isPlaying()) {
+        if (missionFailed || !GameControl.instance.isPlaying()) {
             // Nothing here.
         } else if (Time.time >= nextTimeToMove) {
             // Make some problems for player :)
@@ -55,6 +54,13 @@ public class SillyHuman : MonoBehaviour
 
     private void onMissionFailed() {
         missionFailed = true;
+        StartCoroutine("delayedScream");
+    }
+
+
+    IEnumerable delayedScream() {
+        yield return new WaitForSeconds(Random.value * 2f);
+        sound(scream);
     }
 
 

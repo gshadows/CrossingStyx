@@ -2,8 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PlayerOnBoat : MonoBehaviour
-{
+public class PlayerOnBoat : MyBehaviour {
     [Range(0f, 1f)] public float walkingSpeed = 0.25f;
     [Range(0f, 2f)] public float walkingLimit = 1f; // Position range [-1..+1] corresponds to X-coordinate [-walkingLimit..+wakingLimit].
 
@@ -22,6 +21,9 @@ public class PlayerOnBoat : MonoBehaviour
 
     void Update()
     {
+        if (!GameControl.instance.isPlaying()) {
+            return;
+        }
         if (!missionFailed) {
             walking();
         }

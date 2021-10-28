@@ -3,8 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Waves : MonoBehaviour
-{
+public class Waves : MonoBehaviour {
     [Serializable]
     public struct Octave {
         public Vector2 speed;

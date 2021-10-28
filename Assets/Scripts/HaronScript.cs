@@ -3,8 +3,12 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class HaronScript : MonoBehaviour
-{
+public class HaronScript : MyBehaviour {
+    public int secondsToSayBalance = 3;
+    public AudioClip keepBalance;
+    public AudioClip idiots;
+    public AudioClip woosh;
+
     private FloatBoat boat;
 
 
@@ -13,22 +17,24 @@ public class HaronScript : MonoBehaviour
         boat = GameObject.FindObjectOfType<FloatBoat>();
         boat.onCapsize += onCapsize;
         boat.onSink += onSink;
+        StartCoroutine("sayKeepBalance");
     }
 
+
+    IEnumerable sayKeepBalance() {
+        yield return new WaitForSeconds(secondsToSayBalance);
+        sound(keepBalance);
+    }
+
+
     private void onCapsize() {
-        // Idiots!!!
+        sound(idiots);
     }
 
 
     private void onSink() {
         Destroy(gameObject);
-        // TODO: Woosh sound.
+        sound(woosh);
         // TODO: Instantiate particles.
-    }
-
-
-    void Update()
-    {
-        
     }
 }
