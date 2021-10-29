@@ -12,7 +12,7 @@ public class CameraControl : MonoBehaviour {
 
     void Update()
     {
-        if (GameControl.instance.gameStage != GameControl.GameStage.MENU) {
+        if (!GameControl.instance.isMenu()) {
             mouseLook();
         }
     }

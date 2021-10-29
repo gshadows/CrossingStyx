@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class GameControl : MyBehaviour {
-    public enum GameStage { MENU, PLAY, WIN, LOOSE }
+    public enum GameStage { MENU, PAUSE, PLAY, WIN, LOOSE }
     public enum LooseReason { NONE, BOAT_SANK, PLAYER_DROWN }
 
     [Range(0f, 10f)] public float sankLooseDelay = 5f; // Delay after boat sank before game over.
@@ -28,11 +28,11 @@ public class GameControl : MyBehaviour {
 
 
     public void Update() {
-        #if UNITY_EDITOR
-        if ((gameStage != GameStage.MENU) && Input.GetButtonUp("Jump")) {
-        #else
-        if ((gameStage != GameStage.MENU) && Input.GetButtonUp("Cancel")) {
-        #endif
+#if UNITY_EDITOR
+        if (!isMenu() && Input.GetButtonUp("Jump")) {
+#else
+        if (!isMenu() && Input.GetButtonUp("Cancel")) {
+#endif
             openMenu();
             return;
         }
@@ -56,6 +56,14 @@ public class GameControl : MyBehaviour {
         return gameStage == GameStage.PLAY;
     }
 
+    public bool isGameStarted() {
+        return (gameStage != GameStage.MENU);
+    }
+
+    public bool isMenu() {
+        return (gameStage == GameStage.MENU) || (gameStage == GameStage.PAUSE);
+    }
+
 
     public void onBoatArrives(bool clean) {
         gameStage = GameStage.WIN;
@@ -72,8 +80,7 @@ public class GameControl : MyBehaviour {
 
 
     public void openMenu() {
-        showMouse(true);
-        UIManager.instance.showMainMenu(gameStage == GameStage.PLAY);
-        gameStage = GameStage.MENU;
+        UIManager.instance.showMainMenu();
+        gameStage = (gameStage == GameStage.PLAY) ? GameStage.PAUSE : GameStage.MENU;
     }
 }

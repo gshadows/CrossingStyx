@@ -37,7 +37,7 @@ public class UIManager : MyBehaviour {
 
     void Start() {
         instance = this;
-        showMainMenuImmediate(false); // Show start menu.
+        showMainMenuImmediate(false);
     }
 
 
@@ -57,11 +57,19 @@ public class UIManager : MyBehaviour {
         Debug.Log("START FADE: " + fade);
         this.fade = fade;
         fadeStartTime = Time.time;
+        switch (fade) {
+            case Fade.IN:
+                darkPanel.color = Color.clear;
+                break;
+            case Fade.OUT:
+                darkPanel.color = Color.black;
+                break;
+        }
+        darkPanel.gameObject.SetActive(true);
     }
 
 
     public void hideEverything() {
-        Debug.Log("HIDE EVERYTHING");
         darkPanel.gameObject.SetActive(false);
         mainMessage.gameObject.SetActive(false);
         secondMessage.gameObject.SetActive(false);
@@ -76,7 +84,6 @@ public class UIManager : MyBehaviour {
     private IEnumerator endGameSequence() {
         Debug.Log("END GAME: Show Message");
         hideEverything();
-        darkPanel.gameObject.SetActive(true);
         mainMessage.gameObject.SetActive(true);
         startFade(Fade.IN);
 
@@ -84,9 +91,22 @@ public class UIManager : MyBehaviour {
         if (GameControl.instance.gameStage == GameControl.GameStage.WIN) {
             mainMessage.color = gameWinColor;
             mainMessage.text = "You Win!";
-        } else if (GameControl.instance.gameStage == GameControl.GameStage.WIN) {
+        } else if (GameControl.instance.gameStage == GameControl.GameStage.LOOSE) {
             mainMessage.color = gameOverColor;
             mainMessage.text = "Game Over";
+            secondMessage.gameObject.SetActive(true);
+            secondMessage.color = gameOverColor;
+            switch (GameControl.instance.looseReason) {
+                case GameControl.LooseReason.BOAT_SANK:
+                    secondMessage.text = "You sank Haron's boat! He extremly disappointed!";
+                    break;
+                case GameControl.LooseReason.PLAYER_DROWN:
+                    secondMessage.text = "You fell overboard! What a shame!";
+                    break;
+                default:
+                    secondMessage.text = "No idea what had happened...";
+                    break;
+            }
         } else {
             mainMessage.color = Color.red;
             mainMessage.text = "WTF: " + GameControl.instance.gameStage;
@@ -121,29 +141,20 @@ public class UIManager : MyBehaviour {
     }
 
 
-    public void showMainMenu(bool inGame) {
-        playButtonText.text = inGame ? "Continue" : "Play";
-        StartCoroutine("showMenuSequence");
+    public void showMainMenu() {
+        showMainMenuImmediate(GameControl.instance.isGameStarted());
+        if (GameControl.instance.gameStage == GameControl.GameStage.PLAY) {
+            startFade(Fade.IN);
+        }
     }
-    private IEnumerator showMenuSequence() {
+
+    private void showMainMenuImmediate(bool isGameStarted) {
+        Debug.Log("MAIN MENU");
         hideEverything();
-        Debug.Log("MENU: Start Delayed");
-        startFade(Fade.IN);
         darkPanel.gameObject.SetActive(true);
-
-        yield return new WaitForSeconds(fadeSeconds);
-        Debug.Log("MENU: Show Delayed");
+        playButtonText.text = isGameStarted ? "Continue" : "Play";
         mainMenu.SetActive(true);
-    }
-
-
-    private void showMainMenuImmediate(bool inGame) {
-        hideEverything();
-        Debug.Log("MENU: Show Immediate");
         showMouse(true);
-        playButtonText.text = inGame ? "Continue" : "Play";
-        darkPanel.gameObject.SetActive(true);
-        mainMenu.SetActive(true);
     }
 
 

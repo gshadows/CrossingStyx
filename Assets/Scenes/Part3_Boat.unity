@@ -446,6 +446,8 @@ MonoBehaviour:
   sillyHumans:
   - {fileID: 1581781362}
   - {fileID: 1850348840}
+  capsizing: {fileID: 0}
+  sinking: {fileID: 0}
   state: 0
   roll: 0
 --- !u!54 &427762702
@@ -1175,6 +1177,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ebe25f696a5b8ea4cb03aa23973e601a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  secondsToSayBalance: 3
+  keepBalance: {fileID: 0}
+  idiots: {fileID: 0}
+  woosh: {fileID: 0}
 --- !u!1 &1470701845
 GameObject:
   m_ObjectHideFlags: 0
@@ -1284,6 +1290,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   sankLooseDelay: 5
+  gameOver: {fileID: 0}
+  gameWin: {fileID: 0}
+  gameStage: 0
+  looseReason: 0
 --- !u!4 &1528780467
 Transform:
   m_ObjectHideFlags: 0
@@ -1386,6 +1396,7 @@ MonoBehaviour:
   restingDelaySec: 0.5
   walkingSpeed: 0.5
   walkingLimit: 0.6
+  scream: {fileID: 0}
 --- !u!1 &1634391445
 GameObject:
   m_ObjectHideFlags: 0
@@ -1922,6 +1933,7 @@ MonoBehaviour:
   restingDelaySec: 0.5
   walkingSpeed: 0.5
   walkingLimit: 0.6
+  scream: {fileID: 0}
 --- !u!1 &1857684939
 GameObject:
   m_ObjectHideFlags: 0
