@@ -28,7 +28,7 @@ public class GameControl : MyBehaviour {
 
 
     public void Update() {
-        if ((gameStage != GameStage.MENU) && Input.GetKeyUp("Cancel")) {
+        if ((gameStage != GameStage.MENU) && Input.GetButtonUp("Cancel")) {
             openMenu();
             return;
         }
