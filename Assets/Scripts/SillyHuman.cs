@@ -58,7 +58,7 @@ public class SillyHuman : MyBehaviour {
     }
 
 
-    IEnumerable delayedScream() {
+    IEnumerator delayedScream() {
         yield return new WaitForSeconds(Random.value * 2f);
         sound(scream);
     }

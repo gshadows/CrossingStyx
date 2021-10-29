@@ -13,8 +13,8 @@ public class GameControl : MyBehaviour {
 
     private FloatBoat boat;
 
-    public GameStage gameStage { get; private set; } = GameStage.MENU;
-    public LooseReason looseReason { get; private set; } = LooseReason.NONE;
+    [ReadOnly] public GameStage gameStage = GameStage.MENU;
+    [ReadOnly] public LooseReason looseReason = LooseReason.NONE;
 
     public static GameControl instance;
 
@@ -28,7 +28,11 @@ public class GameControl : MyBehaviour {
 
 
     public void Update() {
+        #if UNITY_EDITOR
+        if ((gameStage != GameStage.MENU) && Input.GetButtonUp("Jump")) {
+        #else
         if ((gameStage != GameStage.MENU) && Input.GetButtonUp("Cancel")) {
+        #endif
             openMenu();
             return;
         }
@@ -39,7 +43,7 @@ public class GameControl : MyBehaviour {
         StartCoroutine("gameOverSank");
     }
 
-    IEnumerable gameOverSank() {
+    IEnumerator gameOverSank() {
         yield return new WaitForSeconds(sankLooseDelay);
         gameStage = GameStage.LOOSE;
         looseReason = LooseReason.BOAT_SANK;

@@ -54,12 +54,14 @@ public class UIManager : MyBehaviour {
 
 
     private void startFade(Fade fade) {
+        Debug.Log("START FADE: " + fade);
         this.fade = fade;
         fadeStartTime = Time.time;
     }
 
 
     public void hideEverything() {
+        Debug.Log("HIDE EVERYTHING");
         darkPanel.gameObject.SetActive(false);
         mainMessage.gameObject.SetActive(false);
         secondMessage.gameObject.SetActive(false);
@@ -71,7 +73,8 @@ public class UIManager : MyBehaviour {
     public void showEndGame() {
         StartCoroutine("endGameSequence");
     }
-    private IEnumerable endGameSequence() {
+    private IEnumerator endGameSequence() {
+        Debug.Log("END GAME: Show Message");
         hideEverything();
         darkPanel.gameObject.SetActive(true);
         mainMessage.gameObject.SetActive(true);
@@ -90,6 +93,7 @@ public class UIManager : MyBehaviour {
         }
 
         yield return new WaitForSeconds(secondsToEndGame);
+        Debug.Log("END GAME: Open Menu Delayed");
         GameControl.instance.openMenu();
     }
 
@@ -97,8 +101,9 @@ public class UIManager : MyBehaviour {
     public void showIntroScreen() {
         StartCoroutine("introSequence");
     }
-    private IEnumerable introSequence() {
+    private IEnumerator introSequence() {
         hideEverything();
+        Debug.Log("INTRO: Show");
         darkPanel.gameObject.SetActive(true);
         mainMessage.gameObject.SetActive(true);
         mainMessage.color = gameChapterColoir;
@@ -108,8 +113,10 @@ public class UIManager : MyBehaviour {
         mainMessage.text = "Crossing the Styx";
 
         yield return new WaitForSeconds(secondsIntroStay);
+        Debug.Log("INTRO: Delayed Fade");
         startFade(Fade.OUT);
         yield return new WaitForSeconds(fadeSeconds);
+        Debug.Log("INTRO: Starting Game");
         GameControl.instance.startGame();
     }
 
@@ -118,20 +125,23 @@ public class UIManager : MyBehaviour {
         playButtonText.text = inGame ? "Continue" : "Play";
         StartCoroutine("showMenuSequence");
     }
-    private IEnumerable showMenuSequence() {
-        startFade(Fade.IN);
+    private IEnumerator showMenuSequence() {
         hideEverything();
+        Debug.Log("MENU: Start Delayed");
+        startFade(Fade.IN);
         darkPanel.gameObject.SetActive(true);
 
         yield return new WaitForSeconds(fadeSeconds);
+        Debug.Log("MENU: Show Delayed");
         mainMenu.SetActive(true);
     }
 
 
     private void showMainMenuImmediate(bool inGame) {
+        hideEverything();
+        Debug.Log("MENU: Show Immediate");
         showMouse(true);
         playButtonText.text = inGame ? "Continue" : "Play";
-        hideEverything();
         darkPanel.gameObject.SetActive(true);
         mainMenu.SetActive(true);
     }
@@ -141,9 +151,13 @@ public class UIManager : MyBehaviour {
         Debug.Log("MENU: Play");
         GameControl.instance.startGame();
     }
+
     public void quit() {
         Debug.Log("MENU: Quit");
-        Application.Quit();
+        #if UNITY_EDITOR
+            UnityEditor.EditorApplication.isPlaying = false;
+        #else
+            Application.Quit();
+        #endif
     }
-
 }

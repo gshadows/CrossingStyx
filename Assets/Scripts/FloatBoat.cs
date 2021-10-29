@@ -32,11 +32,9 @@ public class FloatBoat : MyBehaviour {
 
     private float startCapsizeRoll;
     private float startCapsizeTime;
-    private FloatBoat boat;
 
 
     void Start() {
-        boat = GameObject.FindObjectOfType<FloatBoat>();
     }
 
 

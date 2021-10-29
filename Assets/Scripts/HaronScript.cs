@@ -21,7 +21,7 @@ public class HaronScript : MyBehaviour {
     }
 
 
-    IEnumerable sayKeepBalance() {
+    IEnumerator sayKeepBalance() {
         yield return new WaitForSeconds(secondsToSayBalance);
         sound(keepBalance);
     }
