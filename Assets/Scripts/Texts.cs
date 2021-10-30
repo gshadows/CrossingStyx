@@ -51,7 +51,7 @@ public class Texts {
     }
 
 
-    public static setLanguage (int newLanguage) {
+    public static void setLanguage (int newLanguage) {
         lang = newLanguage;
     }
 
