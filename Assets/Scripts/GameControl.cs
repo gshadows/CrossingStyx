@@ -73,6 +73,9 @@ public class GameControl : MyBehaviour {
 
 
     public void startGame() {
+        if (gameStage != GameStage.PAUSE) {
+            globalBroadcast("onRestart");
+        }
         gameStage = GameStage.PLAY;
         UIManager.instance.hideEverything();
         showMouse(false);

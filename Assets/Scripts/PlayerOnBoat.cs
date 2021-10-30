@@ -17,6 +17,12 @@ public class PlayerOnBoat : MyBehaviour {
         boat = GameObject.FindObjectOfType<FloatBoat>();
         boat.onCapsize += onMissionFailed;
         boat.onSink += onMissionFailed;
+        onRestart();
+    }
+
+    void onRestart() {
+        position = 0f;
+        missionFailed = false;
     }
 
     void Update()

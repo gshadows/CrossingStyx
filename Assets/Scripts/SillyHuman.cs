@@ -22,9 +22,14 @@ public class SillyHuman : MyBehaviour {
         boat = GameObject.FindObjectOfType<FloatBoat>();
         boat.onCapsize += onMissionFailed;
         boat.onSink += onMissionFailed;
-        nextTimeToMove = startWalkingDelaySec;
+        onRestart();
     }
 
+    void onRestart() {
+        nextTimeToMove = Time.time + startWalkingDelaySec;
+        position = targetPosition = 0;
+        missionFailed = false;
+    }
 
     void FixedUpdate() {
         if (missionFailed || !GameControl.instance.isPlaying()) {

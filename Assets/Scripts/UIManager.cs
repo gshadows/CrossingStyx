@@ -19,11 +19,12 @@ public class UIManager : MyBehaviour {
     // Menus.
     public GameObject mainMenu;
     public Text playButtonText; // Play button, switching between "Play" and "Continue".
+    public Text quitButtonText; // Quit button.
 
     // Timings.
     [Range(0, 5)] public int fadeSeconds = 2;
     [Range(0, 10)] public int secondsToEndGame = 5;
-    [Range(0, 10)] public int secondsIntroStay = 5;
+    [Range(0, 10)] public int secondsIntroStay = 3;
 
     // Miscelaneous.
     public Color gameOverColor = Color.red;
@@ -37,9 +38,13 @@ public class UIManager : MyBehaviour {
 
     void Start() {
         instance = this;
+        staticTranslations();
         showMainMenuImmediate(false);
     }
 
+    private void staticTranslations() {
+        quitButtonText.text = Texts.get(Texts.QUIT);
+    }
 
     private void Update() {
         switch (fade) {
@@ -90,21 +95,21 @@ public class UIManager : MyBehaviour {
         // Setup text and color.
         if (GameControl.instance.gameStage == GameControl.GameStage.WIN) {
             mainMessage.color = gameWinColor;
-            mainMessage.text = "You Win!";
+            mainMessage.text = Texts.get(Texts.YOU_WIN);
         } else if (GameControl.instance.gameStage == GameControl.GameStage.LOOSE) {
             mainMessage.color = gameOverColor;
-            mainMessage.text = "Game Over";
+            mainMessage.text = Texts.get(Texts.GAME_OVER);
             secondMessage.gameObject.SetActive(true);
             secondMessage.color = gameOverColor;
             switch (GameControl.instance.looseReason) {
                 case GameControl.LooseReason.BOAT_SANK:
-                    secondMessage.text = "You sank Haron's boat! He extremly disappointed!";
+                    secondMessage.text = Texts.get(Texts.LOOSE_BOAT_SANK);
                     break;
                 case GameControl.LooseReason.PLAYER_DROWN:
-                    secondMessage.text = "You fell overboard! What a shame!";
+                    secondMessage.text = Texts.get(Texts.LOOSE_OVERBOARD);
                     break;
                 default:
-                    secondMessage.text = "No idea what had happened...";
+                    secondMessage.text = Texts.get(Texts.LOOSE_UNKNOWN);
                     break;
             }
         } else {
@@ -123,14 +128,15 @@ public class UIManager : MyBehaviour {
     }
     private IEnumerator introSequence() {
         hideEverything();
+        showMouse(false);
         Debug.Log("INTRO: Show");
         darkPanel.gameObject.SetActive(true);
         mainMessage.gameObject.SetActive(true);
         mainMessage.color = gameChapterColoir;
-        mainMessage.text = "Chapter III";
+        mainMessage.text = Texts.get(Texts.CHAPTER) + " III";
         secondMessage.gameObject.SetActive(true);
         secondMessage.color = gameChapterColoir;
-        mainMessage.text = "Crossing the Styx";
+        secondMessage.text = Texts.get(Texts.GAME_TITLE);
 
         yield return new WaitForSeconds(secondsIntroStay);
         Debug.Log("INTRO: Delayed Fade");
@@ -142,17 +148,17 @@ public class UIManager : MyBehaviour {
 
 
     public void showMainMenu() {
-        showMainMenuImmediate(GameControl.instance.isGameStarted());
+        showMainMenuImmediate(GameControl.instance.gameStage == GameControl.GameStage.PAUSE);
         if (GameControl.instance.gameStage == GameControl.GameStage.PLAY) {
             startFade(Fade.IN);
         }
     }
 
-    private void showMainMenuImmediate(bool isGameStarted) {
+    private void showMainMenuImmediate(bool isPaused) {
         Debug.Log("MAIN MENU");
         hideEverything();
         darkPanel.gameObject.SetActive(true);
-        playButtonText.text = isGameStarted ? "Continue" : "Play";
+        playButtonText.text = isPaused ? Texts.get(Texts.CONTINUE) : Texts.get(Texts.PLAY);
         mainMenu.SetActive(true);
         showMouse(true);
     }
@@ -160,7 +166,7 @@ public class UIManager : MyBehaviour {
 
     public void play() {
         Debug.Log("MENU: Play");
-        GameControl.instance.startGame();
+        showIntroScreen();
     }
 
     public void quit() {

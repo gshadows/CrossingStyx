@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class CameraControl : MonoBehaviour {
+public class CameraControl : MyBehaviour {
     public float mouseSensitivity = 2;
     public float upDownLookRange = 90;
 
@@ -15,6 +15,11 @@ public class CameraControl : MonoBehaviour {
         if (!GameControl.instance.isMenu()) {
             mouseLook();
         }
+    }
+
+
+    void onRestart() {
+        curAngleLR = curAngleUD = 0;
     }
 
 

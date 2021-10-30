@@ -27,14 +27,25 @@ public class FloatBoat : MyBehaviour {
     public AudioClip capsizing;
     public AudioClip sinking;
 
-    [ReadOnly] public State state = State.FLOATING;
-    [ReadOnly] public float roll = 0f; // Current boat roll.
+    [ReadOnly] public State state;
+    [ReadOnly] public float roll; // Current boat roll.
+    [ReadOnly] public float initialBaotPosZ;
 
     private float startCapsizeRoll;
     private float startCapsizeTime;
 
 
     void Start() {
+        initialBaotPosZ = transform.position.z;
+        onRestart();
+    }
+
+    void onRestart() {
+        startCapsizeRoll = startCapsizeTime = 0;
+        state = State.FLOATING;
+        roll = 0f;
+        Vector3 position = new Vector3(transform.position.x, transform.position.y, initialBaotPosZ);
+        transform.SetPositionAndRotation(position, transform.rotation);
     }
 
 
@@ -132,6 +143,7 @@ public class FloatBoat : MyBehaviour {
 
 
     private void OnTriggerEnter(Collider other) {
+        Debug.Log("TRIGGER! tag = " + other.tag);
         if (other.tag == "Finish") {
             switch (state) {
                 case State.FLOATING:

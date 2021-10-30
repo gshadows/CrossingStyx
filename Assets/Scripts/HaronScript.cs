@@ -17,6 +17,12 @@ public class HaronScript : MyBehaviour {
         boat = GameObject.FindObjectOfType<FloatBoat>();
         boat.onCapsize += onCapsize;
         boat.onSink += onSink;
+        onRestart();
+    }
+
+
+    void onRestart() {
+        gameObject.SetActive(true);
         StartCoroutine("sayKeepBalance");
     }
 
@@ -33,7 +39,7 @@ public class HaronScript : MyBehaviour {
 
 
     private void onSink() {
-        Destroy(gameObject);
+        gameObject.SetActive(false);
         sound(woosh);
         // TODO: Instantiate particles.
     }
