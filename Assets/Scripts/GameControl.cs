@@ -77,13 +77,14 @@ public class GameControl : MyBehaviour {
 
     public void startGame() {
         gameStage = GameStage.PLAY;
-        UIManager.instance.hideEverything();
         showMouse(false);
     }
 
 
     public void prepareToStartGame() {
-        globalBroadcast("onRestart");
+        if (gameStage != GameStage.PAUSE) {
+            globalBroadcast("onRestart");
+        }
         boat.switchWaterSound(true);
     }
 

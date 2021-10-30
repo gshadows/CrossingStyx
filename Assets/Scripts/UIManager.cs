@@ -153,15 +153,16 @@ public class UIManager : MyBehaviour {
         yield return new WaitForSeconds(secondsIntroStay);
         //Debug.Log("INTRO: Delayed Fade");
         startFade(Fade.OUT);
-        yield return new WaitForSeconds(fadeSeconds);
+        yield return new WaitForSeconds(fadeSeconds + 1f);
         //Debug.Log("INTRO: Starting Game");
+        hideEverything();
         GameControl.instance.startGame();
     }
 
 
     public void showMainMenu() {
-        showMainMenuImmediate(GameControl.instance.gameStage == GameControl.GameStage.PAUSE);
-        if (GameControl.instance.gameStage == GameControl.GameStage.PLAY) {
+        showMainMenuImmediate(GameControl.instance.isPlaying());
+        if (GameControl.instance.isPlaying()) {
             startFade(Fade.IN);
         }
     }
@@ -178,7 +179,14 @@ public class UIManager : MyBehaviour {
 
     public void play() {
         Debug.Log("MENU: Play");
-        showIntroScreen();
+        if (GameControl.instance.isGameStarted()) {
+            hideEverything();
+            darkPanel.gameObject.SetActive(true);
+            startFade(Fade.OUT);
+            GameControl.instance.startGame();
+        } else {
+            showIntroScreen();
+        }
     }
 
     public void quit() {
