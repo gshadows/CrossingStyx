@@ -1,4 +1,4 @@
-using System.Collections;
+п»їusing System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -14,24 +14,28 @@ public class Texts {
     public const int GAME_OVER = 1;
     public const int LOOSE_BOAT_SANK = 2;
     public const int LOOSE_OVERBOARD = 3;
-    public const int LOOSE_UNKNOWN = 4;
+    public const int UNKNOWN_REASON = 4;
     public const int CHAPTER = 5;
     public const int GAME_TITLE = 6;
     public const int CONTINUE = 7;
     public const int PLAY = 8;
     public const int QUIT = 9;
+    public const int WIN_NORMAL = 10;
+    public const int WIN_LAST_MOMENT = 11;
 
     private static readonly Dictionary<int, string[]> translations = new Dictionary<int, string[]> {
-        { YOU_WIN, new string[]{ "You Win!", "Победа!" } },
+        { YOU_WIN, new string[]{ "You Win!", "РџРѕР±РµРґР°!" } },
         { GAME_OVER, new string[]{ "Game Over", "Game Over" } },
-        { LOOSE_BOAT_SANK, new string[]{ "You sank Charon's boat! He extremly disappointed!", "Ты утопил лодку Харона! Он крайне разочарован!" } },
-        { LOOSE_OVERBOARD, new string[]{ "You fell overboard! What a shame!", "Ты выпал за борт. Это фейл!" } },
-        { LOOSE_UNKNOWN, new string[]{ "No idea why though...", "Знать бы ещё почему..." } },
-        { CHAPTER, new string[]{ "Chapter", "Часть" } },
+        { LOOSE_BOAT_SANK, new string[]{ "You sank Charon's boat! He extremly disappointed!", "РўС‹ СѓС‚РѕРїРёР» Р»РѕРґРєСѓ РҐР°СЂРѕРЅР°! РћРЅ РєСЂР°Р№РЅРµ СЂР°Р·РѕС‡Р°СЂРѕРІР°РЅ!" } },
+        { LOOSE_OVERBOARD, new string[]{ "You fell overboard! What a shame!", "РўС‹ РІС‹РїР°Р» Р·Р° Р±РѕСЂС‚. Р­С‚Рѕ С„РµР№Р»!" } },
+        { UNKNOWN_REASON, new string[]{ "But no idea why...", "Р—РЅР°С‚СЊ Р±С‹ РµС‰С‘ РїРѕС‡РµРјСѓ..." } },
+        { CHAPTER, new string[]{ "Chapter", "Р§Р°СЃС‚СЊ" } },
         { GAME_TITLE, new string[]{ "Crossing the Styx", "Crossing the Styx" } },
-        { CONTINUE, new string[]{ "Continue", "Продолжить" } },
-        { PLAY, new string[]{ "Play", "Играть" } },
-        { QUIT, new string[]{ "Quit", "Выход" } },
+        { CONTINUE, new string[]{ "Continue", "РџСЂРѕРґРѕР»Р¶РёС‚СЊ" } },
+        { PLAY, new string[]{ "Play", "РРіСЂР°С‚СЊ" } },
+        { QUIT, new string[]{ "Quit", "Р’С‹С…РѕРґ" } },
+        { WIN_NORMAL, new string[]{ "Good Job!", "РњРѕР»РѕРґРµС†!" } },
+        { WIN_LAST_MOMENT, new string[]{ "At last moment!", "Р’ РїРѕСЃР»РµРґРЅРёР№ РјРѕРјРµРЅС‚, РѕРґРЅР°РєРѕ!" } },
     };
 
 

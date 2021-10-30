@@ -59,7 +59,7 @@ public class UIManager : MyBehaviour {
 
 
     private void startFade(Fade fade) {
-        Debug.Log("START FADE: " + fade);
+        //Debug.Log("START FADE: " + fade);
         this.fade = fade;
         fadeStartTime = Time.time;
         switch (fade) {
@@ -87,20 +87,30 @@ public class UIManager : MyBehaviour {
         StartCoroutine("endGameSequence");
     }
     private IEnumerator endGameSequence() {
-        Debug.Log("END GAME: Show Message");
+        //Debug.Log("END GAME: Show Message");
         hideEverything();
         mainMessage.gameObject.SetActive(true);
+        secondMessage.gameObject.SetActive(true);
         startFade(Fade.IN);
 
         // Setup text and color.
         if (GameControl.instance.gameStage == GameControl.GameStage.WIN) {
             mainMessage.color = gameWinColor;
             mainMessage.text = Texts.get(Texts.YOU_WIN);
+            switch (GameControl.instance.winReason) {
+                case GameControl.WinReason.NORMAL:
+                    secondMessage.text = Texts.get(Texts.WIN_NORMAL);
+                    break;
+                case GameControl.WinReason.LAST_MOMENT:
+                    secondMessage.text = Texts.get(Texts.WIN_LAST_MOMENT);
+                    break;
+                default:
+                    secondMessage.text = Texts.get(Texts.UNKNOWN_REASON);
+                    break;
+            }
         } else if (GameControl.instance.gameStage == GameControl.GameStage.LOOSE) {
-            mainMessage.color = gameOverColor;
+            mainMessage.color = secondMessage.color = gameOverColor;
             mainMessage.text = Texts.get(Texts.GAME_OVER);
-            secondMessage.gameObject.SetActive(true);
-            secondMessage.color = gameOverColor;
             switch (GameControl.instance.looseReason) {
                 case GameControl.LooseReason.BOAT_SANK:
                     secondMessage.text = Texts.get(Texts.LOOSE_BOAT_SANK);
@@ -109,7 +119,7 @@ public class UIManager : MyBehaviour {
                     secondMessage.text = Texts.get(Texts.LOOSE_OVERBOARD);
                     break;
                 default:
-                    secondMessage.text = Texts.get(Texts.LOOSE_UNKNOWN);
+                    secondMessage.text = Texts.get(Texts.UNKNOWN_REASON);
                     break;
             }
         } else {
@@ -118,7 +128,7 @@ public class UIManager : MyBehaviour {
         }
 
         yield return new WaitForSeconds(secondsToEndGame);
-        Debug.Log("END GAME: Open Menu Delayed");
+        //Debug.Log("END GAME: Open Menu Delayed");
         GameControl.instance.openMenu();
     }
 
@@ -129,7 +139,7 @@ public class UIManager : MyBehaviour {
     private IEnumerator introSequence() {
         hideEverything();
         showMouse(false);
-        Debug.Log("INTRO: Show");
+        //Debug.Log("INTRO: Show");
         darkPanel.gameObject.SetActive(true);
         mainMessage.gameObject.SetActive(true);
         mainMessage.color = gameChapterColoir;
@@ -139,10 +149,10 @@ public class UIManager : MyBehaviour {
         secondMessage.text = Texts.get(Texts.GAME_TITLE);
 
         yield return new WaitForSeconds(secondsIntroStay);
-        Debug.Log("INTRO: Delayed Fade");
+        //Debug.Log("INTRO: Delayed Fade");
         startFade(Fade.OUT);
         yield return new WaitForSeconds(fadeSeconds);
-        Debug.Log("INTRO: Starting Game");
+        //Debug.Log("INTRO: Starting Game");
         GameControl.instance.startGame();
     }
 
@@ -155,7 +165,7 @@ public class UIManager : MyBehaviour {
     }
 
     private void showMainMenuImmediate(bool isPaused) {
-        Debug.Log("MAIN MENU");
+        //Debug.Log("MAIN MENU");
         hideEverything();
         darkPanel.gameObject.SetActive(true);
         playButtonText.text = isPaused ? Texts.get(Texts.CONTINUE) : Texts.get(Texts.PLAY);

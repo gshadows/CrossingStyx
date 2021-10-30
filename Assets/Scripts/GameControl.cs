@@ -4,7 +4,8 @@ using UnityEngine;
 
 public class GameControl : MyBehaviour {
     public enum GameStage { MENU, PAUSE, PLAY, WIN, LOOSE }
-    public enum LooseReason { NONE, BOAT_SANK, PLAYER_DROWN }
+    public enum LooseReason { BOAT_SANK, PLAYER_DROWN }
+    public enum WinReason { NORMAL, LAST_MOMENT }
 
     [Range(0f, 10f)] public float sankLooseDelay = 5f; // Delay after boat sank before game over.
 
@@ -14,7 +15,8 @@ public class GameControl : MyBehaviour {
     private FloatBoat boat;
 
     [ReadOnly] public GameStage gameStage = GameStage.MENU;
-    [ReadOnly] public LooseReason looseReason = LooseReason.NONE;
+    [ReadOnly] public LooseReason looseReason;
+    [ReadOnly] public WinReason winReason;
 
     public static GameControl instance;
 
@@ -67,6 +69,7 @@ public class GameControl : MyBehaviour {
 
     public void onBoatArrives(bool clean) {
         gameStage = GameStage.WIN;
+        winReason = clean ? WinReason.NORMAL : WinReason.LAST_MOMENT;
         UIManager.instance.showEndGame();
         sound(gameWin);
     }

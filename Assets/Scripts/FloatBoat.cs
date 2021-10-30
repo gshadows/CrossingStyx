@@ -75,7 +75,6 @@ public class FloatBoat : MyBehaviour {
                 float targetRoll = calculateTargetRoll();
                 float dr = rollChangeSpeed * Time.fixedDeltaTime;
                 float diff = targetRoll - roll;
-                //Debug.LogFormat("targ {0}, curr {1}, diff {2}, dr {3}, fix {4}", targetRoll, roll, diff, dr, Time.fixedDeltaTime);
                 if (Mathf.Abs(diff) > dr) {
                     roll += dr * Mathf.Sign(diff);
                 } else {
@@ -114,7 +113,7 @@ public class FloatBoat : MyBehaviour {
 
         // Calculate water Y coordinate taking wave height into account.
         float newY;
-        float? waterLevel = null;// waves.getHeight(transform.position);
+        float? waterLevel = waves.getHeight(transform.position);
         if (waterLevel != null) {
             newY = waterLine + (float)waterLevel;
         } else {
@@ -131,19 +130,15 @@ public class FloatBoat : MyBehaviour {
 
     private float calculateTargetRoll() {
         float targetRoll = player.getPosition() * humanMaxRoll;
-        //string dbg = "" + Mathf.Round(targetRoll) + "° vs ";
         foreach (SillyHuman human in sillyHumans) {
             targetRoll += human.getPosition() * humanMaxRoll;
-            //dbg += Mathf.Round(human.getPosition() * humanMaxRoll) + "°, ";
         }
-        //dbg += "-> " + Mathf.Round(targetRoll) + " --- " + Mathf.Round(roll);
-        //Debug.Log(dbg);
         return targetRoll;
     }
 
 
     private void OnTriggerEnter(Collider other) {
-        Debug.Log("TRIGGER! tag = " + other.tag);
+        Debug.Log("TRIGGER BOAT! tag = " + other.tag);
         if (other.tag == "Finish") {
             switch (state) {
                 case State.FLOATING:
