@@ -146,7 +146,7 @@ public class UIManager : MyBehaviour {
         mainMessage.text = Texts.get(Texts.CHAPTER) + " III";
         secondMessage.gameObject.SetActive(true);
         secondMessage.color = gameChapterColoir;
-        secondMessage.text = Texts.get(Texts.GAME_TITLE);
+        secondMessage.text = Texts.get(Texts.PART3_TITLE);
 
         yield return new WaitForSeconds(secondsIntroStay);
         //Debug.Log("INTRO: Delayed Fade");

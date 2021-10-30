@@ -22,6 +22,9 @@ public class Texts {
     public const int QUIT = 9;
     public const int WIN_NORMAL = 10;
     public const int WIN_LAST_MOMENT = 11;
+    public const int PART1_TITLE = 12;
+    public const int PART2_TITLE = 13;
+    public const int PART3_TITLE = 14;
 
     private static readonly Dictionary<int, string[]> translations = new Dictionary<int, string[]> {
         { YOU_WIN, new string[]{ "You Win!", "Победа!" } },
@@ -36,6 +39,9 @@ public class Texts {
         { QUIT, new string[]{ "Quit", "Выход" } },
         { WIN_NORMAL, new string[]{ "Good Job!", "Молодец!" } },
         { WIN_LAST_MOMENT, new string[]{ "At last moment!", "В последний момент, однако!" } },
+        { PART1_TITLE, new string[]{ "To the last journey...", "В последний путь..." } },
+        { PART2_TITLE, new string[]{ "Bying the ticket", "Оплата за проезд" } },
+        { PART3_TITLE, new string[]{ "Crossing the Styx", "Переплывая Стикс" } },
     };
 
 
