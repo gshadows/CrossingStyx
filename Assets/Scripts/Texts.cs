@@ -29,8 +29,8 @@ public class Texts {
     private static readonly Dictionary<int, string[]> translations = new Dictionary<int, string[]> {
         { YOU_WIN, new string[]{ "You Win!", "Победа!" } },
         { GAME_OVER, new string[]{ "Game Over", "Game Over" } },
-        { LOOSE_BOAT_SANK, new string[]{ "You sank Charon's boat! He extremly disappointed!", "Ты утопил лодку Харона! Он крайне разочарован!" } },
-        { LOOSE_OVERBOARD, new string[]{ "You fell overboard! What a shame!", "Ты выпал за борт. Это фейл!" } },
+        { LOOSE_BOAT_SANK, new string[]{ "You sank Charon's boat! He extremly disappointed!", "Вы утопили лодку Харона! Он крайне разочарован!" } },
+        { LOOSE_OVERBOARD, new string[]{ "You fell overboard! What a shame!", "Вы выпали за борт. Это фейл!" } },
         { UNKNOWN_REASON, new string[]{ "But no idea why...", "Знать бы ещё почему..." } },
         { CHAPTER, new string[]{ "Chapter", "Часть" } },
         { GAME_TITLE, new string[]{ "Crossing the Styx", "Crossing the Styx" } },
