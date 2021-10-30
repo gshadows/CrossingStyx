@@ -50,7 +50,7 @@ public class GameControl : MyBehaviour {
         gameStage = GameStage.LOOSE;
         looseReason = LooseReason.BOAT_SANK;
         UIManager.instance.showEndGame();
-        sound(gameOver);
+        soundGlobal(gameOver);
     }
 
 
@@ -71,22 +71,26 @@ public class GameControl : MyBehaviour {
         gameStage = GameStage.WIN;
         winReason = clean ? WinReason.NORMAL : WinReason.LAST_MOMENT;
         UIManager.instance.showEndGame();
-        sound(gameWin);
+        soundGlobal(gameWin);
     }
 
 
     public void startGame() {
-        if (gameStage != GameStage.PAUSE) {
-            globalBroadcast("onRestart");
-        }
         gameStage = GameStage.PLAY;
         UIManager.instance.hideEverything();
         showMouse(false);
     }
 
 
+    public void prepareToStartGame() {
+        globalBroadcast("onRestart");
+        boat.switchWaterSound(true);
+    }
+
+
     public void openMenu() {
         UIManager.instance.showMainMenu();
         gameStage = (gameStage == GameStage.PLAY) ? GameStage.PAUSE : GameStage.MENU;
+        boat.switchWaterSound(false);
     }
 }

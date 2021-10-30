@@ -7,7 +7,7 @@ public class HaronScript : MyBehaviour {
     public int secondsToSayBalance = 3;
     public AudioClip keepBalance;
     public AudioClip idiots;
-    public AudioClip woosh;
+    public AudioClip teleport;
 
     private FloatBoat boat;
 
@@ -28,19 +28,21 @@ public class HaronScript : MyBehaviour {
 
 
     IEnumerator sayKeepBalance() {
+        yield return null;
+        yield return new WaitUntil(() => (GameControl.instance.gameStage == GameControl.GameStage.PLAY));
         yield return new WaitForSeconds(secondsToSayBalance);
-        sound(keepBalance);
+        soundGlobal(keepBalance);
     }
 
 
     private void onCapsize() {
-        sound(idiots);
+        soundGlobal(idiots);
     }
 
 
     private void onSink() {
         gameObject.SetActive(false);
-        sound(woosh);
+        soundGlobal(teleport);
         // TODO: Instantiate particles.
     }
 }

@@ -1,7 +1,6 @@
-using System;
-using System.Collections;
 using UnityEngine;
 
+[RequireComponent(typeof(AudioSource))]
 public class FloatBoat : MyBehaviour {
     public delegate void CapsizeListener();
     public delegate void SinkListener();
@@ -33,9 +32,11 @@ public class FloatBoat : MyBehaviour {
 
     private float startCapsizeRoll;
     private float startCapsizeTime;
+    private AudioSource waterAudioSource;
 
 
     void Start() {
+        waterAudioSource = GetComponent<AudioSource>();
         initialBaotPosZ = transform.position.z;
         onRestart();
     }
@@ -66,7 +67,7 @@ public class FloatBoat : MyBehaviour {
                     startCapsizeRoll = roll;
                     startCapsizeTime = Time.time;
                     onCapsize();
-                    sound(capsizing);
+                    delayedSound(capsizing, 1f + Random.value);
                     break;
                 }
                 rollWaveDelta = wavesMaxRoll * Mathf.Sin(Time.fixedTime); // Waves effect - temporary roll delta.
@@ -88,7 +89,7 @@ public class FloatBoat : MyBehaviour {
                     Debug.Log("SINKING!!!");
                     state = State.SINKING;
                     onSink();
-                    sound(sinking);
+                    delayedSound(sinking, 1f + Random.value);
                     break;
                 }
                 // Capsizing boat by uncontrollable increasing roll.
@@ -138,7 +139,6 @@ public class FloatBoat : MyBehaviour {
 
 
     private void OnTriggerEnter(Collider other) {
-        Debug.Log("TRIGGER BOAT! tag = " + other.tag);
         if (other.tag == "Finish") {
             switch (state) {
                 case State.FLOATING:
@@ -148,6 +148,16 @@ public class FloatBoat : MyBehaviour {
                     GameControl.instance.onBoatArrives(false);
                     break;
             }
+        }
+    }
+
+
+    public void switchWaterSound(bool enable) {
+        waterAudioSource.loop = enable;
+        if (enable) {
+            waterAudioSource.Play();
+        } else {
+            waterAudioSource.Stop();
         }
     }
 }
