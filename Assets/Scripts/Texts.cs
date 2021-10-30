@@ -4,8 +4,8 @@ using UnityEngine;
 
 public class Texts {
 
-    private const int LANG_EN = 0;
-    private const int LANG_RU = 1;
+    public const int LANG_EN = 0;
+    public const int LANG_RU = 1;
 
     private static int lang;
 
@@ -48,6 +48,11 @@ public class Texts {
 
     public static string get(int textId) {
         return translations[textId][lang];
+    }
+
+
+    public static setLanguage (int newLanguage) {
+        lang = newLanguage;
     }
 
 
