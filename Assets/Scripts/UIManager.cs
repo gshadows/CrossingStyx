@@ -20,6 +20,10 @@ public class UIManager : MyBehaviour {
     public GameObject mainMenu;
     public Text playButtonText; // Play button, switching between "Play" and "Continue".
     public Text quitButtonText; // Quit button.
+    public Text versionText;
+    public Text authorText;
+    public Text notice1text;
+    public Text notice2text;
 
     // Timings.
     [Range(0, 5)] public int fadeSeconds = 2;
@@ -44,6 +48,10 @@ public class UIManager : MyBehaviour {
 
     private void staticTranslations() {
         quitButtonText.text = Texts.get(Texts.QUIT);
+        authorText.text = Texts.get(Texts.AUTHOR_INFO);
+        notice1text.text = Texts.get(Texts.NOTICE1);
+        notice2text.text = Texts.get(Texts.NOTICE2);
+        versionText.text = "v" + Application.version;
     }
 
     private void Update() {

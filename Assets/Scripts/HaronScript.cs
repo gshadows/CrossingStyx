@@ -24,7 +24,6 @@ public class HaronScript : MyBehaviour {
 
     public void onRestart() {
         gameObject.SetActive(true);
-        Debug.Log("Hello from Haron!");
         StartCoroutine("sayKeepBalance");
     }
 

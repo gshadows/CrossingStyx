@@ -25,6 +25,9 @@ public class Texts {
     public const int PART1_TITLE = 12;
     public const int PART2_TITLE = 13;
     public const int PART3_TITLE = 14;
+    public const int AUTHOR_INFO = 15;
+    public const int NOTICE1 = 16;
+    public const int NOTICE2 = 17;
 
     private static readonly Dictionary<int, string[]> translations = new Dictionary<int, string[]> {
         { YOU_WIN, new string[]{ "You Win!", "Победа!" } },
@@ -33,7 +36,7 @@ public class Texts {
         { LOOSE_OVERBOARD, new string[]{ "You fell overboard! What a shame!", "Вы выпали за борт. Это фейл!" } },
         { UNKNOWN_REASON, new string[]{ "But no idea why...", "Знать бы ещё почему..." } },
         { CHAPTER, new string[]{ "Chapter", "Часть" } },
-        { GAME_TITLE, new string[]{ "Crossing the Styx", "Crossing the Styx" } },
+        { GAME_TITLE, new string[]{ "Crossing the Styx", null } },
         { CONTINUE, new string[]{ "Continue", "Продолжить" } },
         { PLAY, new string[]{ "Play", "Играть" } },
         { QUIT, new string[]{ "Quit", "Выход" } },
@@ -42,12 +45,25 @@ public class Texts {
         { PART1_TITLE, new string[]{ "To the last journey...", "В последний путь..." } },
         { PART2_TITLE, new string[]{ "Bying the ticket", "Оплата за проезд" } },
         { PART3_TITLE, new string[]{ "Crossing the Styx", "Переплывая Стикс" } },
+        { AUTHOR_INFO, new string[]{ "by G-Shadow for PGD Jam #7", "создано G-Shadow для PGD Jam #7" } },
+        { NOTICE1, new string[]{
+            "Some sounds from FreeSound.org\n              by dominictreis & rvgerxini",
+            "Часть звуков с сайта FreeSound.org\n              от dominictreis и rvgerxini"
+        }},
+        { NOTICE2, new string[]{
+            "Some sounds by BBC Sound Effects\nsound-effects.bbcrewind.co.uk",
+            "Часть звуков от BBC Sound Effects\nsound-effects.bbcrewind.co.uk"
+        }},
     };
 
 
 
     public static string get(int textId) {
-        return translations[textId][lang];
+        string text = translations[textId][lang];
+        if (string.IsNullOrEmpty(text)) {
+            text = translations[textId][0];
+        }
+        return text;
     }
 
 
