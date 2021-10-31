@@ -34,7 +34,6 @@ public class HaronScript : MyBehaviour {
         yield return new WaitUntil(() => (GameControl.instance.gameStage == GameControl.GameStage.PLAY));
         yield return new WaitForSeconds(secondsToSayBalance);
         soundGlobal(keepBalance);
-        onSink();
     }
 
 
@@ -46,10 +45,6 @@ public class HaronScript : MyBehaviour {
     private void onSink() {
         gameObject.SetActive(false);
         soundGlobal(teleport);
-
-        //GameObject splash = Instantiate(teleportParticles, transform.position, transform.rotation);
-        //splash.transform.SetParent(transform.parent, true);
-        //Destroy(splash, 5f);
         teleportParticles.Play();
     }
 }
