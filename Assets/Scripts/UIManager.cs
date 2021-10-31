@@ -155,6 +155,7 @@ public class UIManager : MyBehaviour {
         secondMessage.gameObject.SetActive(true);
         secondMessage.color = gameChapterColoir;
         secondMessage.text = Texts.get(Texts.PART3_TITLE);
+        introImage.gameObject.SetActive(true);
 
         GameControl.instance.prepareToStartGame();
 
