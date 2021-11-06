@@ -1,0 +1,100 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e9620f8c34305754d8cc9a7e49e852d9, type: 3}
+  m_Name: Strings_en
+  m_EditorClassIdentifier: 
+  m_LocaleId:
+    m_Code: en
+  m_SharedData: {fileID: 11400000, guid: ecbfb30bd169cf04cbfd6e3cf7b1ce93, type: 2}
+  m_Metadata:
+    m_Items:
+    - rid: 8872413579288248690
+  m_TableData:
+  - m_Id: 145088028672
+    m_Localized: "Some sounds from FreeSound.org\n              by dominictreis &
+      rvgerxini"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 339586293760
+    m_Localized: 'Some sounds by BBC Sound Effects
+
+      sound-effects.bbcrewind.co.uk          '
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15632220004352
+    m_Localized: by G-Shadow for PGD Jam #7
+    m_Metadata:
+      m_Items: []
+  - m_Id: 19150486085632
+    m_Localized: Quit
+    m_Metadata:
+      m_Items: []
+  - m_Id: 41657914073088
+    m_Localized: Play
+    m_Metadata:
+      m_Items: []
+  - m_Id: 41682295562240
+    m_Localized: Continue
+    m_Metadata:
+      m_Items: []
+  - m_Id: 581019848384512
+    m_Localized: You Win!
+    m_Metadata:
+      m_Items: []
+  - m_Id: 581150278656000
+    m_Localized: Game Over
+    m_Metadata:
+      m_Items: []
+  - m_Id: 581200291536896
+    m_Localized: You sank Charon's boat! He extremly disappointed!
+    m_Metadata:
+      m_Items: []
+  - m_Id: 581248324706304
+    m_Localized: You fell overboard! What a shame!
+    m_Metadata:
+      m_Items: []
+  - m_Id: 581326066130944
+    m_Localized: But no idea why...
+    m_Metadata:
+      m_Items: []
+  - m_Id: 581276241993728
+    m_Localized: Good Job!
+    m_Metadata:
+      m_Items: []
+  - m_Id: 581301546229760
+    m_Localized: At last moment!
+    m_Metadata:
+      m_Items: []
+  - m_Id: 581747279110144
+    m_Localized: Chapter {0:choose(1|2|3):I|II|III|?}
+    m_Metadata:
+      m_Items:
+      - rid: 8872413579288248690
+  - m_Id: 582041912188928
+    m_Localized: To the last journey...
+    m_Metadata:
+      m_Items: []
+  - m_Id: 582047272509440
+    m_Localized: Bying the ticket
+    m_Metadata:
+      m_Items: []
+  - m_Id: 582047960375296
+    m_Localized: Crossing the Styx
+    m_Metadata:
+      m_Items: []
+  references:
+    version: 2
+    RefIds:
+    - rid: 8872413579288248690
+      type: {class: SmartFormatTag, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
+      data:
+        m_Entries: 00a0ebb7a111000000a0eb9718110200

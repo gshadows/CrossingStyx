@@ -1,6 +1,7 @@
+using System;
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Localization;
 using UnityEngine.UI;
 
 public class UIManager : MyBehaviour {
@@ -19,11 +20,7 @@ public class UIManager : MyBehaviour {
     // Menus.
     public GameObject mainMenu;
     public Text playButtonText; // Play button, switching between "Play" and "Continue".
-    public Text quitButtonText; // Quit button.
     public Text versionText;
-    public Text authorText;
-    public Text notice1text;
-    public Text notice2text;
 
     // Timings.
     [Range(0, 5)] public int fadeSeconds = 2;
@@ -35,6 +32,19 @@ public class UIManager : MyBehaviour {
     public Color gameWinColor = Color.green;
     public Color gameChapterColoir = Color.gray;
 
+    [Header("Localization")]
+    public LocalizedString playButtonString;
+    public LocalizedString continueButtonString;
+    public LocalizedString youWinString;
+    public LocalizedString youLooseString;
+    public LocalizedString winCleanString;
+    public LocalizedString winLastMomentString;
+    public LocalizedString looseReasonSankString;
+    public LocalizedString looseReaseonOverboardString;
+    public LocalizedString chapterString;
+    public LocalizedString chapterTitleString;
+    public LocalizedString unknownReasonString;
+
 
     private Fade fade = Fade.NONE;
     private float fadeStartTime;
@@ -42,16 +52,8 @@ public class UIManager : MyBehaviour {
 
     void Start() {
         instance = this;
-        staticTranslations();
-        showMainMenuImmediate(false);
-    }
-
-    private void staticTranslations() {
-        quitButtonText.text = Texts.get(Texts.QUIT);
-        authorText.text = Texts.get(Texts.AUTHOR_INFO);
-        notice1text.text = Texts.get(Texts.NOTICE1);
-        notice2text.text = Texts.get(Texts.NOTICE2);
         versionText.text = "v" + Application.version;
+        showMainMenuImmediate(false);
     }
 
     private void Update() {
@@ -104,30 +106,30 @@ public class UIManager : MyBehaviour {
         // Setup text and color.
         if (GameControl.instance.gameStage == GameControl.GameStage.WIN) {
             mainMessage.color = gameWinColor;
-            mainMessage.text = Texts.get(Texts.YOU_WIN);
+            mainMessage.text = youWinString.GetLocalizedString();
             switch (GameControl.instance.winReason) {
                 case GameControl.WinReason.NORMAL:
-                    secondMessage.text = Texts.get(Texts.WIN_NORMAL);
+                    secondMessage.text = winCleanString.GetLocalizedString();
                     break;
                 case GameControl.WinReason.LAST_MOMENT:
-                    secondMessage.text = Texts.get(Texts.WIN_LAST_MOMENT);
+                    secondMessage.text = winLastMomentString.GetLocalizedString();
                     break;
                 default:
-                    secondMessage.text = Texts.get(Texts.UNKNOWN_REASON);
+                    secondMessage.text = unknownReasonString.GetLocalizedString();
                     break;
             }
         } else if (GameControl.instance.gameStage == GameControl.GameStage.LOOSE) {
             mainMessage.color = secondMessage.color = gameOverColor;
-            mainMessage.text = Texts.get(Texts.GAME_OVER);
+            mainMessage.text = youLooseString.GetLocalizedString();
             switch (GameControl.instance.looseReason) {
                 case GameControl.LooseReason.BOAT_SANK:
-                    secondMessage.text = Texts.get(Texts.LOOSE_BOAT_SANK);
+                    secondMessage.text = looseReasonSankString.GetLocalizedString();
                     break;
                 case GameControl.LooseReason.PLAYER_DROWN:
-                    secondMessage.text = Texts.get(Texts.LOOSE_OVERBOARD);
+                    secondMessage.text = looseReaseonOverboardString.GetLocalizedString();
                     break;
                 default:
-                    secondMessage.text = Texts.get(Texts.UNKNOWN_REASON);
+                    secondMessage.text = unknownReasonString.GetLocalizedString();
                     break;
             }
         } else {
@@ -151,10 +153,21 @@ public class UIManager : MyBehaviour {
         darkPanel.gameObject.SetActive(true);
         mainMessage.gameObject.SetActive(true);
         mainMessage.color = gameChapterColoir;
-        mainMessage.text = Texts.get(Texts.CHAPTER) + " III";
+        string str = "???";
+        try {
+            Debug.Log("Chapter num looking...");
+            str = chapterString.GetLocalizedString(new string[]{"3"});
+            Debug.Log("Chapter num look END");
+        }
+        catch (Exception ex) {
+            Debug.LogError("Fail: " + ex);
+        }
+        Debug.LogFormat("Chapter num localized STR: [{0}]", str);
+        mainMessage.text = SafeLocalizedStr(chapterString, "", "3");
+        Debug.LogFormat("Chapter num localized: [{0}]", mainMessage.text);
         secondMessage.gameObject.SetActive(true);
         secondMessage.color = gameChapterColoir;
-        secondMessage.text = Texts.get(Texts.PART3_TITLE);
+        secondMessage.text = chapterTitleString.GetLocalizedString();
         introImage.gameObject.SetActive(true);
 
         GameControl.instance.prepareToStartGame();
@@ -175,12 +188,13 @@ public class UIManager : MyBehaviour {
             startFade(Fade.IN);
         }
     }
-
+    
     private void showMainMenuImmediate(bool isPaused) {
         //Debug.Log("MAIN MENU");
         hideEverything();
         darkPanel.gameObject.SetActive(true);
-        playButtonText.text = isPaused ? Texts.get(Texts.CONTINUE) : Texts.get(Texts.PLAY);
+        LocalizedString buttonText = isPaused ? continueButtonString : playButtonString;
+        playButtonText.text = buttonText.GetLocalizedString();
         mainMenu.SetActive(true);
         showMouse(true);
     }

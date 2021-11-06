@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Reflection;
 using UnityEngine;
+using UnityEngine.Localization;
 
 public class MyBehaviour : MonoBehaviour {
     protected void showMouse(bool show) {
@@ -92,6 +93,19 @@ public class MyBehaviour : MonoBehaviour {
         }
         catch (Exception ex) {
             Debug.LogErrorFormat("Failed bcast reflexion invoke with {0}", ex);
+        }
+    }
+
+
+    protected static string SafeLocalizedStr (LocalizedString lstr, string fallback = "", params object[] args) {
+        try {
+            string str = lstr.GetLocalizedString(args);
+            if (str == null) str = fallback;
+            return str;
+        }
+        catch (Exception ex) {
+            Debug.LogWarning("Failed to resolve string: " + ex.Message);
+            return fallback;
         }
     }
 }

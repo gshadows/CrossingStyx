@@ -8,4 +8,6 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/Part3_Boat.unity
     guid: 002e44bfda2dc3048b042fba5f85bf25
-  m_configObjects: {}
+  m_configObjects:
+    com.unity.addressableassets: {fileID: 11400000, guid: 43821bb65f3d0a34f9e6a5f03f5ad82f, type: 2}
+    com.unity.localization.settings: {fileID: 11400000, guid: 9182c219d133c874fa83faf726217635, type: 2}
