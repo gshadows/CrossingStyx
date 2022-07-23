@@ -1,6 +1,7 @@
 **Crossing The Styx**
 
 A game for PGD Jam #7 (Autumn 2021).
+Download from Itch: https://gshadow.itch.io/crossing-the-styx
 
 ![Crossing The Styx cover image](docs/CrossingTheStyx_itch_cover.jpg)
 
