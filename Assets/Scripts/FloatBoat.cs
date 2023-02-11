@@ -2,11 +2,6 @@ using UnityEngine;
 
 [RequireComponent(typeof(AudioSource))]
 public class FloatBoat : MyBehaviour {
-    public delegate void CapsizeListener();
-    public delegate void SinkListener();
-    public event CapsizeListener onCapsize;
-    public event SinkListener onSink;
-
     public enum State { FLOATING, CAPSIZING, SINKING };
 
     public Waves waves;
@@ -33,6 +28,9 @@ public class FloatBoat : MyBehaviour {
     private float startCapsizeRoll;
     private float startCapsizeTime;
     private AudioSource waterAudioSource;
+
+    public VoidEventSO capsizingEvent;
+    public VoidEventSO sinkingEvent;
 
 
     void Start() {
@@ -66,7 +64,7 @@ public class FloatBoat : MyBehaviour {
                     state = State.CAPSIZING;
                     startCapsizeRoll = roll;
                     startCapsizeTime = Time.time;
-                    onCapsize();
+                    capsizingEvent.raise();
                     delayedSound(capsizing, 1f + Random.value);
                     break;
                 }
@@ -88,7 +86,7 @@ public class FloatBoat : MyBehaviour {
                 if (Mathf.Abs(roll) > sinkRoll) {
                     Debug.Log("SINKING!!!");
                     state = State.SINKING;
-                    onSink();
+                    sinkingEvent.raise();
                     delayedSound(sinking, 1f + Random.value);
                     break;
                 }

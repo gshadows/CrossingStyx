@@ -15,13 +15,13 @@ public class SillyHuman : MyBehaviour {
     private bool missionFailed = false; // True if boat is capsizing/sinking (player failed).
     private float nextTimeToMove;       // Delay before next movement.
 
-    private FloatBoat boat;
+    public VoidEventSO capsizingEvent;
+    public VoidEventSO sinkingEvent;
 
 
     void Start() {
-        boat = GameObject.FindObjectOfType<FloatBoat>();
-        boat.onCapsize += onMissionFailed;
-        boat.onSink += onMissionFailed;
+        capsizingEvent.addListener(onMissionFailed);
+        sinkingEvent.addListener(onMissionFailed);
         onRestart();
     }
 

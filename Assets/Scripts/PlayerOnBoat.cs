@@ -9,14 +9,15 @@ public class PlayerOnBoat : MyBehaviour {
     private float position = 0f;
     private float startX;
     private bool missionFailed = false;
-    private FloatBoat boat;
+
+    public VoidEventSO capsizingEvent;
+    public VoidEventSO sinkingEvent;
 
 
     private void Start() {
         startX = transform.localPosition.x;
-        boat = GameObject.FindObjectOfType<FloatBoat>();
-        boat.onCapsize += onMissionFailed;
-        boat.onSink += onMissionFailed;
+        capsizingEvent.addListener(onMissionFailed);
+        sinkingEvent.addListener(onMissionFailed);
         onRestart();
     }
 
